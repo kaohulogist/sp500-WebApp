@@ -51,9 +51,8 @@ def filedownload(df):
 st.markdown(filedownload(df_selected_sector), unsafe_allow_html=True)
 
 # https://pypi.org/project/yfinance/
-@st.cache
+@st.cache(suppress_st_warning=True)
 def load_stocks_data():
-    st.write("awaiting download of S&P500 data")
     loaded_stocks_data = yf.download(
     tickers = list(df_selected_sector.Symbol),
     period = "max",
