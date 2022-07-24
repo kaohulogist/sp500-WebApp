@@ -55,7 +55,7 @@ st.markdown(filedownload(df_selected_sector), unsafe_allow_html=True)
 def load_stocks_data():
     loaded_stocks_data = yf.download(
     tickers = list(df_selected_sector.Symbol),
-    period = "max",
+    period = "ytd",
     interval = "1d",
     group_by = 'ticker',
     auto_adjust = True,
