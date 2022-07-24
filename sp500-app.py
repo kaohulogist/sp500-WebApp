@@ -1,3 +1,4 @@
+from unittest import loader
 import streamlit as st
 import pandas as pd
 import base64
@@ -50,21 +51,25 @@ def filedownload(df):
 st.markdown(filedownload(df_selected_sector), unsafe_allow_html=True)
 
 # https://pypi.org/project/yfinance/
+@st.cache
+def load_stocks_data():
+    st.write("awaiting download of S&P500 data")
+    loaded_stocks_data = yf.download(
+    tickers = list(df_selected_sector.Symbol),
+    period = "max",
+    interval = "1d",
+    group_by = 'ticker',
+    auto_adjust = True,
+    prepost = True,
+    threads = True,
+    proxy = None)
+    return loaded_stocks_data
+loaded_stocks_data = load_stocks_data()
 
-data = yf.download(
-        tickers = list(df_selected_sector[:10].Symbol),
-        period = "ytd",
-        interval = "1d",
-        group_by = 'ticker',
-        auto_adjust = True,
-        prepost = True,
-        threads = True,
-        proxy = None
-    )
 
 # Plot Closing Price of Query Symbol
 def price_plot(symbol):
-  df = pd.DataFrame(data[symbol].Close)
+  df = pd.DataFrame(loaded_stocks_data[symbol].Close)
   df['Date'] = df.index
   fig, ax = plt.subplots()
   ax.fill_between(df.Date, df.Close, color='skyblue', alpha=0.3)
@@ -74,17 +79,17 @@ def price_plot(symbol):
   ax.set_ylabel('Closing Price', fontweight='bold')
   return st.pyplot(fig)
 
-num_company = st.sidebar.slider('Number of Companies', 1, 5)
+num_company =  st.sidebar.slider('Number of Companies', 1, 5)
 
-if st.sidebar.button('Show Plots'):
+if st.sidebar.button('Show Plots TOP 10 in sector'):
     st.header('Stock Closing Price')
     for i in list(df_selected_sector.Symbol)[:num_company]:
         price_plot(i)
 
-input_symbol = st.sidebar.text_input("Input Symbol")
-if st.sidebar.button('Plot'):
+input_symbol = (st.sidebar.text_input("Input Symbol")).upper()
+if st.sidebar.button('Plot a symbol'):
     st.header("Individual Stock Closing Price")
-    pass
+    price_plot(input_symbol)
 
     
 
