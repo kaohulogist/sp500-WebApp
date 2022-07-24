@@ -1,1 +1,1 @@
-web: sh setup.sh && streamlit run basketabll-app.py
+web: sh setup.sh && streamlit run sp500-app.py
