@@ -76,7 +76,25 @@ def price_plot(symbol):
 
 num_company = st.sidebar.slider('Number of Companies', 1, 5)
 
-if st.button('Show Plots'):
+if st.sidebar.button('Show Plots'):
     st.header('Stock Closing Price')
     for i in list(df_selected_sector.Symbol)[:num_company]:
         price_plot(i)
+
+input_symbol = st.sidebar.text_input("Input Symbol")
+if st.sidebar.button('Plot'):
+    st.header("Individual Stock Closing Price")
+    pass
+
+    
+
+favorite_sector = st.sidebar.selectbox('Favorite Sector', df['GICS Sector'].unique())
+
+if st.sidebar.button('show stocks'):
+    st.subheader('Stocks from favorite sector: ' + favorite_sector)
+    stocks_fav_sec = sector.get_group(favorite_sector).iloc[:,[0]].transpose()
+    st.write(stocks_fav_sec)
+
+
+
+      
